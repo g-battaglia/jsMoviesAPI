@@ -1,7 +1,7 @@
 const searchInput = document.querySelector('.movieName');
 const searchBtn = document.querySelector('.searchBtn');
 const cardTitles = document.querySelectorAll('.card-title')
-const omdbURL = 'http://www.omdbapi.com/?apikey=2f09956a&t='
+const omdbURL = 'https://www.omdbapi.com/?apikey=2f09956a&t='
 
 var oReq = new XMLHttpRequest();
 
