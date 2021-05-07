@@ -1,0 +1,27 @@
+.cards {
+  margin: 0 auto;
+  margin-top: 6em;
+  margin-bottom: 2em;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2em;
+}
+.cards .card {
+  width: 45%;
+  max-width: 300px;
+  transition: all 100ms ease-in-out;
+}
+.cards .card:hover {
+  margin-top: -1em;
+  margin-bottom: 1em;
+}
+.cards .card .card-img-top {
+  width: 100%;
+  height: 250px;
+  background-color: grey;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+
+/*# sourceMappingURL=style.css.map */
