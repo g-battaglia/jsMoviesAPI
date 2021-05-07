@@ -15,16 +15,14 @@ function jsonMovie() {
     oReq.onload = () => {
       if (oReq.status === 200) {
         parsedObj = JSON.parse(oReq.response);
-        console.log(parsedObj);
+        return parsedObj
       } else {
           versionCallback(oReq.statusText, null);
       }
-  };
-
+    };
   })
-
 }
 
-jsonMovie();
+jsonObj = jsonMovie();
 
 
