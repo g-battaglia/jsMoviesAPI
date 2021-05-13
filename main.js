@@ -5,15 +5,19 @@ const cardsContainer = document.getElementById('cardsContainer');
 
 getOmdb = (movieName) => {
   searchInput.value = '';
-  const omdbURL = 'https://www.omdbapi.com/?apikey=2f09956a&t='
+  const omdbURL = 'https://movie-api-bt.herokuapp.com/'
   let oReq = new XMLHttpRequest();
-  oReq.open("GET", omdbURL + movieName);
+  oReq.open("GET", omdbURL + movieName + '?l=20');
   oReq.send();
   // Register a callback that will be invoked when the response arrives
   oReq.onload = () => {
     if (oReq.status === 200) {
-      parsedObj = JSON.parse(oReq.response);
-      appendMovie(parsedObj);
+      parsedList = JSON.parse(oReq.response);
+      console.log(parsedList)
+      for (obj of parsedList) {
+        appendMovie(obj);
+      }
+      //appendMovie(parsedObj);
     } else {
         versionCallback(oReq.statusText, null);
     }
@@ -21,20 +25,6 @@ getOmdb = (movieName) => {
 }
 
 
-getTasteDive = (movieNameT) => {
-  const tasteDiveURL = 'https://tastedive.com/api/similar?type=movies&k=410571-StudyApl-KT62OLS2&q='
-  let oReq = new XMLHttpRequest();
-  oReq.open("GET", tasteDiveURL + movieNameT);
-  oReq.send();
-  oReq.onload = () => {
-    if (oReq.status === 200) {
-      parsedObj = JSON.parse(oReq.response);
-      console.log(parsedObj)
-    } else {
-        versionCallback(oReq.statusText, null);
-    }
-  };
-}
 
 appendMovie = (movieData) => {
   let movieDiv  = document.createElement('div')
@@ -64,7 +54,6 @@ movieHandler = () => {
   if (searchInput.value == '') {
     return
   }
-  getTasteDive(searchInput.value);
   getOmdb(searchInput.value);
   
 }
