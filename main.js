@@ -9,10 +9,15 @@ getOmdb = (movieName) => {
   let oReq = new XMLHttpRequest();
   oReq.open("GET", omdbURL + movieName + '?l=20');
   oReq.send();
+  cardsContainer.innerHTML = 'Loading'
   // Register a callback that will be invoked when the response arrives
   oReq.onload = () => {
     if (oReq.status === 200) {
       parsedList = JSON.parse(oReq.response);
+      if (parsedList.length == 0) {
+        cardsContainer.innerHTML = 'No result';
+        return
+      }
       console.log(parsedList)
       for (obj of parsedList) {
         appendMovie(obj);
