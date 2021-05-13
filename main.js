@@ -12,6 +12,7 @@ getOmdb = (movieName) => {
   cardsContainer.innerHTML = 'Loading'
   // Register a callback that will be invoked when the response arrives
   oReq.onload = () => {
+    cardsContainer.innerHTML = ''
     if (oReq.status === 200) {
       parsedList = JSON.parse(oReq.response);
       if (parsedList.length == 0) {
