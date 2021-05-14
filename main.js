@@ -3,7 +3,7 @@ const searchBtn = document.querySelector('.searchBtn');
 const cardTitles = document.querySelectorAll('.card-title');
 const cardsContainer = document.getElementById('cardsContainer');
 
-getOmdb = (movieName) => {
+getFromAPI = (movieName) => {
   searchInput.value = '';
   const omdbURL = 'https://movie-api-bt.herokuapp.com/'
   let oReq = new XMLHttpRequest();
@@ -15,21 +15,25 @@ getOmdb = (movieName) => {
     cardsContainer.innerHTML = ''
     if (oReq.status === 200) {
       parsedList = JSON.parse(oReq.response);
-      //! Sort:
-      //!
+      // Check if empty list:  
       if (parsedList.length == 0) {
         cardsContainer.innerHTML = 'No result';
         return
       }
-      console.log(parsedList)
+      // Sort:
+      parsedList.sort((a, b) => (a.imdbRating > b.imdbRating) ? 1 : -1)
+      console.log('list:', parsedList)
+      // Loop:
       for (obj of parsedList) {
+        // Check if error in the list:
         if (obj.Error) {
-          console.log(obj)
-          return
+          console.log('Error! Movie not found!')
+        } else {
+          // Append the movie to the DOM:
+          appendSuggestedMovie(obj);
         }
-        appendMovie(obj);
+        
       }
-      //appendMovie(parsedObj);
     } else {
         versionCallback(oReq.statusText, null);
     }
@@ -38,7 +42,7 @@ getOmdb = (movieName) => {
 
 
 
-appendMovie = (movieData) => {
+appendSuggestedMovie = (movieData) => {
   let movieDiv  = document.createElement('div')
   movieDiv.classList.add('card', 'bg-light', 'shadow')
   movieDiv.innerHTML = `
@@ -53,7 +57,11 @@ appendMovie = (movieData) => {
       ${movieData.Plot}
     </p>
     <p class="card-text">
-      <small>IMDB Rating: ${movieData.Ratings[0]['Value']}</small>
+      <small>Director: ${movieData.Director}</small>
+      <br>
+      <small>Year: ${movieData.Year}</small>
+      <br>
+      <small>IMDB Rating: ${movieData.imdbRating}</small>
     </p>
     <a class="btn btn-outline-dark" href="#">Go somewhere</a>
   </div>
@@ -66,7 +74,7 @@ movieHandler = () => {
   if (searchInput.value == '') {
     return
   }
-  getOmdb(searchInput.value);
+  getFromAPI(searchInput.value);
   
 }
 
