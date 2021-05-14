@@ -15,12 +15,18 @@ getOmdb = (movieName) => {
     cardsContainer.innerHTML = ''
     if (oReq.status === 200) {
       parsedList = JSON.parse(oReq.response);
+      //! Sort:
+      //!
       if (parsedList.length == 0) {
         cardsContainer.innerHTML = 'No result';
         return
       }
       console.log(parsedList)
       for (obj of parsedList) {
+        if (obj.Error) {
+          console.log(obj)
+          return
+        }
         appendMovie(obj);
       }
       //appendMovie(parsedObj);
