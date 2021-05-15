@@ -2,9 +2,13 @@ const searchInput = document.querySelector('.movieName');
 const searchBtn = document.querySelector('.searchBtn');
 const cardTitles = document.querySelectorAll('.card-title');
 const cardsContainer = document.getElementById('cardsContainer');
+// // const sortTypeInput = 'Rating';
+let sortTypeInput = document.querySelector('.sortTypeInput');
+
 
 getFromAPI = (movieName) => {
   searchInput.value = '';
+  sortTypeInput = sortTypeInput.value;
   const omdbURL = 'https://movie-api-bt.herokuapp.com/'
   let oReq = new XMLHttpRequest();
   oReq.open("GET", omdbURL + movieName + '?l=20');
@@ -21,7 +25,13 @@ getFromAPI = (movieName) => {
         return
       }
       // Sort:
-      parsedList.sort((a, b) => (a.imdbRating > b.imdbRating) ? 1 : -1)
+      if (sortTypeInput == 'Title') {
+        parsedList.sort((a, b) => (a.Title > b.Title) ? 1 : -1).reverse()
+      } else if (sortTypeInput == 'Rating') {
+        parsedList.sort((a, b) => (a.imdbRating > b.imdbRating) ? 1 : -1)
+      } else {
+        
+      }
       console.log('list:', parsedList)
       // Loop:
       for (obj of parsedList) {
@@ -44,7 +54,7 @@ getFromAPI = (movieName) => {
 
 appendSuggestedMovie = (movieData) => {
   let movieDiv  = document.createElement('div')
-  movieDiv.classList.add('card', 'bg-light', 'shadow')
+  movieDiv.classList.add('card', 'bg-light', 'shadow', 'm-3')
   movieDiv.innerHTML = `
   <div class="card-img-top" 
        style="background-image: url('${movieData.Poster}')">
