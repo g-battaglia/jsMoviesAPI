@@ -1,71 +1,57 @@
-const searchInput = document.querySelector('.movieName');
-const searchBtn = document.querySelector('.searchBtn');
-const cardTitles = document.querySelectorAll('.card-title');
-const cardsContainer = document.getElementById('cardsContainer');
-// // const sortTypeInput = 'Rating';
-let sortTypeInput = document.querySelector('.sortTypeInput');
+let searchInput = document.querySelector(".movieName");
+const searchBtn = document.querySelector(".searchBtn");
+const cardTitles = document.querySelectorAll(".card-title");
+const cardsContainer = document.getElementById("cardsContainer");
+let sortTypeInput = document.querySelector(".sortTypeInput");
 
-
-getFromAPI = (movieName) => {
-  searchInput.value = '';
+const getFromAPI = async (movieName) => {
+  let searchInput = document.querySelector(".movieName");
+  cardsContainer.innerHTML = "Loading";
+  searchInput.value = "";
   sortTypeInput = sortTypeInput.value;
-  const omdbURL = 'https://movie-api-bt.herokuapp.com/'
-  let oReq = new XMLHttpRequest();
-  oReq.open("GET", omdbURL + movieName + '?l=20');
-  oReq.send();
-  cardsContainer.innerHTML = 'Loading'
-  // Register a callback that will be invoked when the response arrives
-  oReq.onload = () => {
-    cardsContainer.innerHTML = ''
-    if (oReq.status === 200) {
-      parsedList = JSON.parse(oReq.response);
-      // Check if empty list:  
-      if (parsedList.length == 0) {
-        cardsContainer.innerHTML = 'No result';
-        return
-      }
-      // Sort:
-      if (sortTypeInput == 'Title') {
-        parsedList.sort((a, b) => (a.Title > b.Title) ? 1 : -1).reverse()
-      } else if (sortTypeInput == 'Rating') {
-        parsedList.sort((a, b) => (a.imdbRating > b.imdbRating) ? 1 : -1)
-      } else {
-        
-      }
-      console.log('list:', parsedList)
-      // Loop:
-      for (obj of parsedList) {
-        // Check if error in the list:
-        if (obj.Error) {
-          console.log('Error! Movie not found!')
-        } else {
-          // Append the movie to the DOM:
-          appendSuggestedMovie(obj);
-        }
-        
-      }
+  const omdbURL = "https://movie-api-bt.herokuapp.com/" + movieName + "?l=50";
+  const res = await fetch(omdbURL);
+  const data = await res.json();
+  console.log(data);
+  cardsContainer.innerHTML = "";
+  if (data.length == 0) {
+    cardsContainer.innerHTML = "No result";
+    return;
+  }
+  switch (sortTypeInput) {
+    case "Title":
+      data.sort((a, b) => (a.Title > b.Title ? 1 : -1)).reverse();
+      break;
+    case "Rating":
+      data.sort((a, b) => (a.imdbRating > b.imdbRating ? 1 : -1));
+      break;
+    case "Year":
+      data.sort((a, b) => (b.Year > a.Year ? 1 : -1));
+      break;
+  }
+
+  for (obj of data) {
+    // Check if error in the list:
+    if (obj.Error) {
+      console.log("Error! Movie not found!");
+      return;
     } else {
-        versionCallback(oReq.statusText, null);
+      // Append the movie to the DOM:
+      appendSuggestedMovie(obj);
     }
-  };
-}
+  }
+};
 
-
-
-appendSuggestedMovie = (movieData) => {
-  let movieDiv  = document.createElement('div')
-  movieDiv.classList.add('card', 'bg-light', 'shadow', 'm-3')
+const appendSuggestedMovie = (movieData) => {
+  let movieDiv = document.createElement("div");
+  movieDiv.classList.add("card", "bg-light", "shadow", "m-3");
   movieDiv.innerHTML = `
   <div class="card-img-top" 
        style="background-image: url('${movieData.Poster}')">
   </div>
   <div class="card-body">
-    <h5 class="card-title">
-      ${movieData.Title}
-    </h5>
-    <p class="card-text">
-      ${movieData.Plot}
-    </p>
+    <h5 class="card-title">${movieData.Title}</h5>
+    <p class="card-text">${movieData.Plot}</p>
     <p class="card-text">
       <small>Director: ${movieData.Director}</small>
       <br>
@@ -77,18 +63,15 @@ appendSuggestedMovie = (movieData) => {
   </div>
   `;
   cardsContainer.prepend(movieDiv);
-
-}
+};
 
 movieHandler = () => {
-  if (searchInput.value == '') {
-    return
+  console.log(searchInput);
+  if (searchInput.value == "") {
+    console.log("empty");
+    return;
   }
   getFromAPI(searchInput.value);
-  
-}
+};
 
-searchBtn.addEventListener('click', movieHandler);
-
-
-
+searchBtn.addEventListener("click", movieHandler);
