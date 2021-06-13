@@ -9,7 +9,7 @@ const getFromAPI = async (movieName) => {
   cardsContainer.innerHTML = "Loading";
   searchInput.value = "";
   sortTypeInput = sortTypeInput.value;
-  const omdbURL = "https://movie-api-bt.herokuapp.com/" + movieName + "?l=50";
+  const omdbURL = "https://movie-api-bt.herokuapp.com/" + movieName + "?l=20";
   const res = await fetch(omdbURL);
   const data = await res.json();
   console.log(data);
