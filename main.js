@@ -2,13 +2,10 @@ let searchInput = document.querySelector(".movieName");
 const searchBtn = document.querySelector(".searchBtn");
 const cardTitles = document.querySelectorAll(".card-title");
 const cardsContainer = document.getElementById("cardsContainer");
-let sortTypeInput = document.querySelector(".sortTypeInput");
 
 const getFromAPI = async (movieName) => {
-  let searchInput = document.querySelector(".movieName");
   cardsContainer.innerHTML = "Loading";
-  searchInput.value = "";
-  sortTypeInput = sortTypeInput.value;
+  // //searchInput.value = "";
   const omdbURL = "https://movie-api-bt.herokuapp.com/" + movieName + "?l=20";
   const res = await fetch(omdbURL);
   const data = await res.json();
@@ -18,15 +15,16 @@ const getFromAPI = async (movieName) => {
     cardsContainer.innerHTML = "No result";
     return;
   }
+  let sortTypeInput = document.querySelector(".sortTypeInput").value;
   switch (sortTypeInput) {
     case "Title":
-      data.sort((a, b) => (a.Title > b.Title ? 1 : -1)).reverse();
+      data.sort((a, b) => (a.Title > b.Title ? -1 : 1));
       break;
     case "Rating":
       data.sort((a, b) => (a.imdbRating > b.imdbRating ? 1 : -1));
       break;
     case "Year":
-      data.sort((a, b) => (b.Year > a.Year ? 1 : -1));
+      data.sort((a, b) => (a.Year > b.Year ? -1 : 1));
       break;
   }
 
