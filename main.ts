@@ -1,7 +1,7 @@
 let searchInput = document.querySelector(".movieName") as HTMLInputElement;
-const searchBtn = document.querySelector(".searchBtn");
-const cardTitles = document.querySelectorAll(".card-title");
-const cardsContainer = document.getElementById("cardsContainer");
+const searchBtn = document.querySelector(".searchBtn") as HTMLElement;
+let sortTypeInput = document.querySelector(".sortTypeInput") as HTMLInputElement;
+const cardsContainer = document.getElementById("cardsContainer") as HTMLElement;
 
 const getFromAPI = async (movieName: string) => {
   cardsContainer.innerHTML = "Loading";
@@ -15,20 +15,20 @@ const getFromAPI = async (movieName: string) => {
     cardsContainer.innerHTML = "No result";
     return;
   }
-  let sortTypeInput = document.querySelector(".sortTypeInput").value;
-  switch (sortTypeInput) {
+  let sortTypeValue = sortTypeInput.value;
+  switch (sortTypeValue) {
     case "Title":
-      data.sort((a, b) => (a.Title > b.Title ? -1 : 1));
+      data.sort((a: { Title: string }, b: { Title: string }) => (a.Title > b.Title ? -1 : 1));
       break;
     case "Rating":
-      data.sort((a, b) => (a.imdbRating > b.imdbRating ? 1 : -1));
+      data.sort((a: { imdbRating: string }, b: { imdbRating: string }) => (a.imdbRating > b.imdbRating ? 1 : -1));
       break;
     case "Year":
-      data.sort((a, b) => (a.Year > b.Year ? -1 : 1));
+      data.sort((a: { Year: number }, b: { Year: number }) => (a.Year > b.Year ? -1 : 1));
       break;
   }
 
-  for (obj of data) {
+  for (const obj of data) {
     // Check if error in the list:
     if (obj.Error) {
       console.log("Error! Movie not found!");
@@ -40,7 +40,7 @@ const getFromAPI = async (movieName: string) => {
   }
 };
 
-const appendSuggestedMovie = (movieData) => {
+const appendSuggestedMovie = (movieData: any) => {
   let movieDiv = document.createElement("div");
   movieDiv.classList.add("card", "bg-light", "shadow", "m-3");
   movieDiv.innerHTML = `
